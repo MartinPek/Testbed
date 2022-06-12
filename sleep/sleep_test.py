@@ -1,9 +1,30 @@
 import psutil
 import time
 from time import sleep
+import json
 
 
-def net_usage(inf="Ethernet", interval=15):   #change the inf variable according to the interface
+# or maybe https://docs.python.org/2/library/configparser.html
+class Settings:
+    def __init__(self):
+        try:
+            with open('config.json') as json_file:
+                cfg = json.loads(json_file.read())
+                self.scan_interval = cfg["scan_interval"]
+                self.cpu_interval_threshold = cfg["cpu_interval_threshold"]
+                self.cpu_load_threshold = cfg["cpu_load_threshold"]
+                self.net_interval_threshold = cfg["net_interval_threshold"]
+                self.net_load_threshold = cfg["net_load_threshold"]
+        except ValueError as e:
+            print('failure to read config.json')
+            print(e)
+            exit()
+
+
+settings = Settings()
+
+
+def net_usage(inf="Ethernet", interval=15):   # change the inf variable according to the interface
     net_stat = psutil.net_io_counters(pernic=True, nowrap=True)[inf]
     net_in_1 = net_stat.bytes_recv
     net_out_1 = net_stat.bytes_sent
@@ -36,9 +57,8 @@ def main():
             low_cpu_intervals += 1
         else:
             low_cpu_intervals = 0
-        print( low_cpu_intervals )
+        print(low_cpu_intervals)
         sleep(1)
-
 
         # cpu_usage()
         # net_usage()
