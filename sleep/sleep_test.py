@@ -24,22 +24,29 @@ class Settings:
 settings = Settings()
 
 
-def net_usage(inf="Ethernet", interval=15):   # change the inf variable according to the interface
-    net_stat = psutil.net_io_counters(pernic=True, nowrap=True)[inf]
-    net_in_1 = net_stat.bytes_recv
-    net_out_1 = net_stat.bytes_sent
-    time.sleep(interval)
-    net_stat = psutil.net_io_counters(pernic=True, nowrap=True)[inf]
-    net_in_2 = net_stat.bytes_recv
-    net_out_2 = net_stat.bytes_sent
+def net_usage(interval=1):  # change the inf variable according to the interface
+    net_in, net_out = 0, 0
 
-    net_in = round((net_in_2 - net_in_1) / 1024 / 1024, 3)
-    net_out = round((net_out_2 - net_out_1) / 1024 / 1024, 3)
+    ret = psutil.net_io_counters(pernic=True, nowrap=True)
+    for key, value in ret.items():
+        print(value)
+        net_in -= value.bytes_recv
+        net_out -= value.bytes_sent
+
+    time.sleep(interval)
+    ret = psutil.net_io_counters(pernic=True, nowrap=True)
+    for key, value in ret.items():
+        net_in += value.bytes_recv
+        net_out += value.bytes_sent
+
+    net_in = round(net_in / 1024 / 1024 / interval, 3)
+    net_out = round(net_out / 1024 / 1024 / interval, 3)
 
     print(f"Current net-usage:\nIN: {net_in} MB/s, OUT: {net_out} MB/s")
 
 
 def main():
+    net_usage()
 
     low_cpu_intervals = low_net_intervals = 0
     cpu_load_threshold = 5
@@ -64,6 +71,7 @@ def main():
         # net_usage()
 
     print("shutdown")
+    # os.system("shutdown /s /t 1")
 
 
 if __name__ == '__main__':
