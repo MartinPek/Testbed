@@ -3,6 +3,7 @@
   "cpu_interval_threshold": 5,
   "cpu_load_threshold": 5,
   "net_interval_threshold": 5,
-  "net_load_threshold": 0
-
+  "net_in_threshold": 0.01,
+  "net_out_threshold": 0.02,
+  "update_interval": 60
 }
