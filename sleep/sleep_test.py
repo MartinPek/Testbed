@@ -1,6 +1,7 @@
 import psutil
 import time
 from time import sleep
+from datetime import datetime as dt
 import json
 import os
 
@@ -18,6 +19,8 @@ class Settings:
                 self.net_in_threshold = cfg["net_in_threshold"]
                 self.net_out_threshold = cfg["net_out_threshold"]
                 self.update_interval = cfg["update_interval"]
+                # during this timeframe there is a sleep instead of a shutdown
+                self.sleep_timefame = cfg["sleep_timeframe"]
         except ValueError as e:
             print('failure to read config.json')
             print(e)
@@ -41,10 +44,10 @@ def get_net_usage(interval=1):  # change the inf variable according to the inter
         net_in += value.bytes_recv
         net_out += value.bytes_sent
 
-    net_in = round(net_in / 1024 / 1024 / interval, 3)
-    net_out = round(net_out / 1024 / 1024 / interval, 3)
+    net_in = round(net_in / 1024 / interval, 3)
+    net_out = round(net_out / 1024 / interval, 3)
 
-    # print(f"Current net-usage:\nIN: {net_in} MB/s, OUT: {net_out} MB/s")
+    print(f"Current net-usage:\nIN: {net_in} Kb/s, OUT: {net_out} Kb/s")
     return net_in, net_out
 
 
@@ -59,7 +62,7 @@ def main():
 
     while True:
         net_in, net_out = get_net_usage(setts.update_interval)
-        if net_in < 0.02 or net_out < 0.01:
+        if net_in < setts.net_in_threshold or net_out < setts.net_out_threshold:
             low_net_intervals += 1
         else:
             low_net_intervals = 0
@@ -71,9 +74,17 @@ def main():
 
         if low_net_intervals > setts.net_interval_threshold and low_cpu_intervals > setts.cpu_interval_threshold:
             # maybe make a popup prompts here
-            os.system("shutdown /s /t 1")
+            now = dt.now()
+            day_hour = now.hour + now.minute / 60
 
-        print(f"low_cpu_intervals {low_cpu_intervals} \n low_network {low_net_intervals}")
+            for timeframe in setts.sleep_timefame:
+                if timeframe[0] < day_hour < timeframe[1]:
+                    os.system("timeout /t 1")
+                    return True
+            os.system("shutdown /s /t 1")
+            return True
+
+        print(f"low_cpu_intervals {low_cpu_intervals} \n low_network_intervals {low_net_intervals}")
 
 
 if __name__ == '__main__':
