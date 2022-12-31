@@ -6,5 +6,7 @@
   "net_in_threshold": 40,
   "net_out_threshold": 1,
   "update_interval": 60,
-  "sleep_timeframe": [11,23]
+  "sleep_timeframes": [
+    [11,23]
+  ]
 }

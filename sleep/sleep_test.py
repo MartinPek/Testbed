@@ -20,11 +20,13 @@ class Settings:
                 self.net_out_threshold = cfg["net_out_threshold"]
                 self.update_interval = cfg["update_interval"]
                 # during this timeframe there is a sleep instead of a shutdown
-                self.sleep_timefame = cfg["sleep_timeframe"]
+                self.sleep_timefames = cfg["sleep_timeframes"]
         except ValueError as e:
             print('failure to read config.json')
             print(e)
             exit()
+        if type(self.sleep_timefames) is not list:
+            raise ValueError("sleep_timeframes must be a list of timeframes")
 
 
 setts = Settings()
@@ -72,20 +74,20 @@ def main():
         else:
             low_cpu_intervals = 0
 
-        if low_net_intervals > setts.net_interval_threshold and low_cpu_intervals > setts.cpu_interval_threshold:
+        if True or low_net_intervals > setts.net_interval_threshold and low_cpu_intervals > setts.cpu_interval_threshold:
             # maybe make a popup prompts here
             now = dt.now()
             day_hour = now.hour + now.minute / 60
 
-            for timeframe in setts.sleep_timefame:
+            for timeframe in setts.sleep_timefames:
                 if timeframe[0] < day_hour < timeframe[1]:
                     os.system("timeout /t 1")
-                    return True
             os.system("shutdown /s /t 1")
-            return True
+            sleep(5)
 
         print(f"low_cpu_intervals {low_cpu_intervals} \n low_network_intervals {low_net_intervals}")
 
 
 if __name__ == '__main__':
     main()
+    sleep(5)
