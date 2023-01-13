@@ -12,3 +12,6 @@ https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-yo
 timing out the session:
 https://riptutorial.com/flask/example/30387/timing--out-the-login-session
 alternative flask-sqf-alchemy
+
+# fix GPIO busy
+echo 25 > /sys/class/gpio/unexport
