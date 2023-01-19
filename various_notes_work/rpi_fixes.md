@@ -1,5 +1,7 @@
 ### HDMI failing on newer RPI OS
 
+sudo apt full-upgrade
+
 sudo nano /boot/config.txt
 
 hdmi_safe=1

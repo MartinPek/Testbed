@@ -8,6 +8,8 @@ speaker-test -t wav -c 2
 
 
 
+
+
 ### guide that sadly aint the full story or just sometimes doesnt work?
 
 https://nerdiy.de/en/howto-raspberrypi-standardlautsprecher-konfigurieren/
