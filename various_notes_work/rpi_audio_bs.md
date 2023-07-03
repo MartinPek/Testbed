@@ -24,3 +24,16 @@ sudo nano /boot/config.txt
 hdmi_force_hotplug=1
 hdmi_drive=2
 </code>
+
+### HDMI and crontab dont work together
+
+Audio output from HDMI doesnt work with crontab
+inside crontab
+<code>
+XDG_RUNTIME_DIR=/run/user/1000
+</code>
+or alternatively only in the run.sh
+<code>
+  XDG_RUNTIME_DIR=/run/user/$(id -u)
+export XDG_RUNTIME_DIR
+</code>
