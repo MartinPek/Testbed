@@ -37,3 +37,8 @@ or alternatively only in the run.sh
   XDG_RUNTIME_DIR=/run/user/$(id -u)
 export XDG_RUNTIME_DIR
 </code>
+
+
+### crontab output 
+
+sh >> out.txt  2>&1
