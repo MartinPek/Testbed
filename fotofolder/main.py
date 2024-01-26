@@ -9,8 +9,12 @@ from datetime import datetime as dt
 def main():
     now = dt.now()
     folder_name = now.strftime("%Y_%m_%d")
-    os.chdir("C:/Users/Kasse/KundenfotosST")
-    os.mkdir(folder_name)
+    try:
+        os.chdir("C:/Users/Kasse/KundenfotosST")
+        os.mkdir(folder_name)
+    except OSError as err:
+        print(err)
+        pass
 
 
 # Press the green button in the gutter to run the script.
