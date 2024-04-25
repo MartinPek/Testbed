@@ -1,0 +1,3 @@
+[submodule "test_pkg"]
+	path = test_pkg
+	url = https://github.com/MartinPek/test_pkg
